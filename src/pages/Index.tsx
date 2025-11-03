@@ -1,30 +1,19 @@
-import { useState } from 'react';
 import { CustomCursor } from '@/components/CustomCursor';
 import { CountdownTimer } from '@/components/CountdownTimer';
-import { EventCard } from '@/components/EventCard';
-import { EventModal } from '@/components/EventModal';
-import { Instagram, Linkedin, Twitter, Globe, ExternalLink } from 'lucide-react';
+import { Instagram, Linkedin, Twitter, Globe, ExternalLink, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Index = () => {
-  const [selectedEvent, setSelectedEvent] = useState<number | null>(null);
-
   const events = [
     {
       title: 'Event 1: SDG Idea Presentation',
-      description: `Each team receives one Sustainable Development Goal (SDG) through email. Based on the assigned goal, the team must identify a problem within the college related to that goal.
-
-The problem statement must be submitted 12 hours before the event, and the solution must be prepared as a PowerPoint presentation and submitted before the event starts.`,
       timing: '10:00 AM – 12:00 PM',
+      path: '/event-1',
     },
     {
       title: 'Event 2: Blind Code',
-      description: `Participants will face hidden logic challenges in a Flask-based console.
-
-They can only observe input–output behavior (Q1, Q2, Q3...) to infer the logic. After analyzing the pattern, they must implement the solution on HackerRank or the coding portal provided.
-
-Example: If input "hello" gives output "olleh," they deduce it reverses the string.`,
       timing: '1:00 PM – 3:00 PM',
-      tagline: 'Observe. Analyze. Code the unseen.',
+      path: '/event-2',
     },
   ];
 
@@ -92,17 +81,41 @@ Example: If input "hello" gives output "olleh," they deduce it reverses the stri
 
           <div className="grid md:grid-cols-2 gap-8">
             {events.map((event, index) => (
-              <div
+              <Link
                 key={index}
-                className="animate-in fade-in slide-in-from-bottom duration-700"
-                style={{ animationDelay: `${index * 200}ms` }}
+                to={event.path}
+                className="group relative bg-card border-2 border-primary/50 rounded-lg p-6 md:p-8 w-full transition-all duration-300 hover:border-primary hover:scale-105 interactive overflow-hidden animate-in fade-in slide-in-from-bottom duration-700"
+                style={{ 
+                  boxShadow: '0 0 20px hsl(var(--neon-cyan) / 0.3)',
+                  animationDelay: `${index * 200}ms`
+                }}
               >
-                <EventCard
-                  title={event.title}
-                  timing={event.timing}
-                  onClick={() => setSelectedEvent(index)}
-                />
-              </div>
+                {/* Background glow effect */}
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-secondary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                
+                {/* Corner decorations */}
+                <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-primary transition-all duration-300 group-hover:w-12 group-hover:h-12" />
+                <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-primary transition-all duration-300 group-hover:w-12 group-hover:h-12" />
+                <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-primary transition-all duration-300 group-hover:w-12 group-hover:h-12" />
+                <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-primary transition-all duration-300 group-hover:w-12 group-hover:h-12" />
+
+                {/* Content */}
+                <div className="relative z-10 text-left space-y-4">
+                  <h3 className="font-display text-2xl md:text-3xl font-bold text-primary group-hover:glow-cyan transition-all duration-300">
+                    {event.title}
+                  </h3>
+
+                  <div className="text-foreground/80 font-body text-sm md:text-base">
+                    <p>{event.timing}</p>
+                    <p>November 5, 2025</p>
+                  </div>
+
+                  <div className="flex items-center gap-2 pt-4 text-primary group-hover:text-secondary transition-colors duration-300 font-body font-semibold">
+                    <span>View Details</span>
+                    <ArrowRight size={20} className="group-hover:translate-x-2 transition-transform duration-300" />
+                  </div>
+                </div>
+              </Link>
             ))}
           </div>
         </div>
@@ -159,14 +172,6 @@ Example: If input "hello" gives output "olleh," they deduce it reverses the stri
         </div>
       </footer>
 
-      {/* Event Modal */}
-      {selectedEvent !== null && (
-        <EventModal
-          isOpen={selectedEvent !== null}
-          onClose={() => setSelectedEvent(null)}
-          event={events[selectedEvent]}
-        />
-      )}
     </div>
   );
 };
